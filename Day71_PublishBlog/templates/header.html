@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-    <meta name="description" content="A Test of Python and the Internet." />
+    <meta name="description" content="Professional Portfolio of Python Projects" />
     <meta name="author" content="Thomas Persichilli" />
     <title>Thomas's Blog</title>
     {% block styles %}
@@ -43,8 +43,8 @@
   <body>
     <!-- Navigation-->
     <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+      <!--  <a href="https://tinyurl.com/thomasp3d">https://tinyurl.com/thomasp3d</a>-->
       <div class="container px-4 px-lg-5">
-        <a class="navbar-brand" href="/">Start Bootstrap</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -58,54 +58,46 @@
           <i class="fas fa-bars"></i>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
-          <ul class="navbar-nav ms-auto py-4 py-lg-0">
-            <li class="nav-item">
-              <a
-                class="nav-link px-lg-3 py-3 py-lg-4"
-                href="{{ url_for('get_all_posts') }}"
-                >Home</a
-              >
-            </li>
-            <!-- Only show Login/Register if user is logged out. Otherwise show "Log Out" -->
-            {% if not current_user.is_authenticated: %}
-            <li class="nav-item">
-              <a
-                class="nav-link px-lg-3 py-3 py-lg-4"
-                href="{{ url_for('login') }}"
-                >Login</a
-              >
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link px-lg-3 py-3 py-lg-4"
-                href="{{ url_for('register') }}"
-                >Register</a
-              >
-            </li>
-            {% else: %}
-            <li class="nav-item">
-              <a
-                class="nav-link px-lg-3 py-3 py-lg-4"
-                href="{{ url_for('logout') }}"
-                >Log Out</a
-              >
-            </li>
-            {% endif %}
-            <li class="nav-item">
-              <a
-                class="nav-link px-lg-3 py-3 py-lg-4"
-                href="{{ url_for('about') }}"
-                >About</a
-              >
-            </li>
-            <li class="nav-item">
-              <a
-                class="nav-link px-lg-3 py-3 py-lg-4"
-                href="{{ url_for('contact') }}"
-                >Contact</a
-              >
-            </li>
-          </ul>
+            <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link px-lg-3 py-3 py-lg-4"
+                       href="{{ url_for('home') }}">Home</a>
+                </li>
+                <!-- Only show Login/Register if user is logged out. Otherwise show "Log Out" -->
+                <!-- <li class="nav-item">
+    <a
+       class="nav-link px-lg-3 py-3 py-lg-4"
+       href="{{ url_for('login') }}"
+       >Login</a
+     >
+               </li>
+               <li class="nav-item">
+                   <a class="nav-link px-lg-3 py-3 py-lg-4"
+                      href="{{ url_for('register') }}">Register</a>
+               </li>-->
+                {% if current_user.is_authenticated: %}
+                <li class="nav-item">
+                    <a class="nav-link px-lg-3 py-3 py-lg-4"
+                       href="{{ url_for('logout') }}">Log Out</a>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link px-lg-3 py-3 py-lg-4"
+                       href="{{ url_for('cheatsheets') }}">Cheat Sheets</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link px-lg-3 py-3 py-lg-4"
+                       href="{{ url_for('projects') }}">Projects</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link px-lg-3 py-3 py-lg-4"
+                       href="{{ url_for('resume') }}">Resume</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link px-lg-3 py-3 py-lg-4"
+                       href="{{ url_for('contact') }}">Contact</a>
+                </li>
+            </ul>
         </div>
       </div>
     </nav>

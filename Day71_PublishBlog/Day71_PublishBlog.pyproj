@@ -44,6 +44,9 @@
     <Content Include="static\css\styles.css" />
     <Content Include="static\js\scripts.js" />
     <Content Include="templates\about.html" />
+    <Content Include="templates\cheatsheets.html" />
+    <Content Include="templates\projects.html" />
+    <Content Include="templates\resume.html" />
     <Content Include="templates\contact.html" />
     <Content Include="templates\footer.html" />
     <Content Include="templates\header.html" />

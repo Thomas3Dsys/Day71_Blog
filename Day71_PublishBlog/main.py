@@ -143,7 +143,7 @@ def register():
         db.session.commit()
         # This line will authenticate the user with Flask-Login
         login_user(new_user)
-        return redirect(url_for("get_all_posts"))
+        return redirect(url_for("cheatsheets"))
     return render_template("register.html", form=form, current_user=current_user)
 
 
@@ -165,7 +165,7 @@ def login():
             return redirect(url_for('login'))
         else:
             login_user(user)
-            return redirect(url_for('get_all_posts'))
+            return redirect(url_for('cheatsheets'))
 
     return render_template("login.html", form=form, current_user=current_user)
 
@@ -173,14 +173,27 @@ def login():
 @app.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('get_all_posts'))
+    return redirect(url_for('cheatsheets'))
+
+
+@app.route('/resume')
+def resume():
+    return render_template("resume.html", current_user=current_user)
+
+@app.route('/projects')
+def projects():
+    return render_template("projects.html", current_user=current_user)
 
 
 @app.route('/')
-def get_all_posts():
+def home():
+    return render_template("index.html", current_user=current_user)
+
+@app.route('/cheatsheets')
+def cheatsheets():
     result = db.session.execute(db.select(BlogPost))
     posts = result.scalars().all()
-    return render_template("index.html", all_posts=posts, current_user=current_user)
+    return render_template("cheatsheets.html", all_posts=posts, current_user=current_user)
 
 
 # Add a POST method to be able to post comments
@@ -221,7 +234,7 @@ def add_new_post():
         )
         db.session.add(new_post)
         db.session.commit()
-        return redirect(url_for("get_all_posts"))
+        return redirect(url_for("cheatsheets"))
     return render_template("make-post.html", form=form, current_user=current_user)
 
 
@@ -254,7 +267,7 @@ def delete_post(post_id):
     post_to_delete = db.get_or_404(BlogPost, post_id)
     db.session.delete(post_to_delete)
     db.session.commit()
-    return redirect(url_for('get_all_posts'))
+    return redirect(url_for('cheatsheets'))
 
 
 @app.route("/about")
