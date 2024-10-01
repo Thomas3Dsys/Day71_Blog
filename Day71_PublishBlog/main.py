@@ -1,4 +1,5 @@
 from datetime import date
+from turtle import title
 from flask import Flask, abort, render_template, redirect, url_for, flash, request
 from flask_bootstrap import Bootstrap5
 from flask_ckeditor import CKEditor
@@ -9,7 +10,7 @@ from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String, Text
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
-from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
+from forms import CreateSheetForm, RegisterForm, LoginForm, NewProjectForm,EditProjectForm 
 # Optional: add contact me email functionality (Day 60)
 # import smtplib
 import os
@@ -54,20 +55,14 @@ db.init_app(app)
 
 
 # CONFIGURE TABLES
-class BlogPost(db.Model):
-    __tablename__ = "blog_posts"
+class Sheet(db.Model):
+    __tablename__ = "sheets"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    # Create Foreign Key, "users.id" the users refers to the tablename of User.
-    author_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
-    # Create reference to the User object. The "posts" refers to the posts property in the User class.
-    author = relationship("User", back_populates="posts")
     title: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
     subtitle: Mapped[str] = mapped_column(String(250), nullable=False)
     date: Mapped[str] = mapped_column(String(250), nullable=False)
     body: Mapped[str] = mapped_column(Text, nullable=False)
     img_url: Mapped[str] = mapped_column(String(250), nullable=False)
-    # Parent relationship to the comments
-    comments = relationship("Comment", back_populates="parent_post")
 
 
 # Create a User table for all your registered users
@@ -77,26 +72,19 @@ class User(UserMixin, db.Model):
     email: Mapped[str] = mapped_column(String(100), unique=True)
     password: Mapped[str] = mapped_column(String(100))
     name: Mapped[str] = mapped_column(String(100))
-    # This will act like a list of BlogPost objects attached to each User.
-    # The "author" refers to the author property in the BlogPost class.
-    posts = relationship("BlogPost", back_populates="author")
-    # Parent relationship: "comment_author" refers to the comment_author property in the Comment class.
-    comments = relationship("Comment", back_populates="comment_author")
 
 
-# Create a table for the comments on the blog posts
-class Comment(db.Model):
-    __tablename__ = "comments"
+
+class Project(db.Model):
+    __tablename__ = "projects"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    text: Mapped[str] = mapped_column(Text, nullable=False)
-    # Child relationship:"users.id" The users refers to the tablename of the User class.
-    # "comments" refers to the comments property in the User class.
-    author_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
-    comment_author = relationship("User", back_populates="comments")
-    # Child Relationship to the BlogPosts
-    post_id: Mapped[str] = mapped_column(Integer, db.ForeignKey("blog_posts.id"))
-    parent_post = relationship("BlogPost", back_populates="comments")
-
+    title: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
+    git_url: Mapped[str] = mapped_column(String(250), unique=True, nullable=True)
+    blurb: Mapped[str] = mapped_column(String(250), nullable=True)
+    date: Mapped[str] = mapped_column(String(250), nullable=False)
+    body: Mapped[str] = mapped_column(Text, nullable=True)
+    img_thumb: Mapped[str] = mapped_column(String(250), nullable=True)
+    
 
 with app.app_context():
     db.create_all()
@@ -143,7 +131,7 @@ def register():
         db.session.commit()
         # This line will authenticate the user with Flask-Login
         login_user(new_user)
-        return redirect(url_for("cheatsheets"))
+        return redirect(url_for("sheets"))
     return render_template("register.html", form=form, current_user=current_user)
 
 
@@ -165,7 +153,7 @@ def login():
             return redirect(url_for('login'))
         else:
             login_user(user)
-            return redirect(url_for('cheatsheets'))
+            return redirect(url_for('sheets'))
 
     return render_template("login.html", form=form, current_user=current_user)
 
@@ -173,101 +161,135 @@ def login():
 @app.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('cheatsheets'))
+    return redirect(url_for('sheets'))
 
 
 @app.route('/resume')
 def resume():
     return render_template("resume.html", current_user=current_user)
 
-@app.route('/projects')
+@app.route('/projects', methods=["GET", "POST"])
 def projects():
-    return render_template("projects.html", current_user=current_user)
+    form = NewProjectForm()
+    result = db.session.execute(db.select(Project))
+    projects = result.scalars().all()
+    if form.validate_on_submit():
+        new_project = Project(
+            title=form.title.data,
+            date =date.today().strftime("%B %d, %Y")
+            )
+        db.session.add(new_project)
+        db.session.commit()
+        flash(f"New Project Entry Created: {form.title.data}")
+        new_form = NewProjectForm()
+        return render_template("projects.html", all_projects=projects, form=new_form, current_user=current_user)
+        
+
+    return render_template("projects.html", all_projects=projects, form=form, current_user=current_user)
 
 
 @app.route('/')
 def home():
-    return render_template("index.html", current_user=current_user)
+    proj_res = db.session.execute(db.select(Project))
+    projects= proj_res.scalars().all()
 
-@app.route('/cheatsheets')
-def cheatsheets():
-    result = db.session.execute(db.select(BlogPost))
-    posts = result.scalars().all()
-    return render_template("cheatsheets.html", all_posts=posts, current_user=current_user)
+    sheet_res = db.session.execute(db.select(Sheet))
+    sheets= sheet_res.scalars().all()
+
+    return render_template("index.html", top_projects = projects, top_sheets = sheets, current_user=current_user)
+
+@app.route('/sheets')
+def sheets():
+    result = db.session.execute(db.select(Sheet))
+    sheets = result.scalars().all()
+    return render_template("sheets.html", all_sheets=sheets, current_user=current_user)
 
 
-# Add a POST method to be able to post comments
-@app.route("/post/<int:post_id>", methods=["GET", "POST"])
-def show_post(post_id):
-    requested_post = db.get_or_404(BlogPost, post_id)
-    # Add the CommentForm to the route
-    comment_form = CommentForm()
-    # Only allow logged-in users to comment on posts
-    if comment_form.validate_on_submit():
-        if not current_user.is_authenticated:
-            flash("You need to login or register to comment.")
-            return redirect(url_for("login"))
+@app.route("/sheet/<int:sheet_id>", methods=["GET", "POST"])
+def show_sheet(sheet_id):
+    requested_sheet = db.get_or_404(Sheet, sheet_id)
+    return render_template("sheet.html", sheet=requested_sheet, current_user=current_user)
 
-        new_comment = Comment(
-            text=comment_form.comment_text.data,
-            comment_author=current_user,
-            parent_post=requested_post
-        )
-        db.session.add(new_comment)
+
+
+@app.route("/project/<int:project_id>", methods=["GET", "POST"])
+def view_project(project_id):
+    requested_project = db.get_or_404(Project, project_id)
+    return render_template("project.html", project=requested_project, current_user=current_user)
+
+
+@app.route("/edit-project/<int:project_id>", methods=["GET", "POST"])
+def edit_project(project_id):
+    project = db.get_or_404(Project, project_id)
+    edit_form = EditProjectForm(
+         title=project.title,
+         blurb=project.blurb,
+         git_url=project.git_url,
+         img_thumb=project.img_thumb,
+         body=project.body
+     )
+    if edit_form.validate_on_submit():
+        project.title = edit_form.title.data
+        project.blurb = edit_form.blurb.data
+        project.git_url = edit_form.git_url.data
+        project.img_thumb = edit_form.img_thumb.data
+        project.body = edit_form.body.data
         db.session.commit()
-    return render_template("post.html", post=requested_post, current_user=current_user, form=comment_form)
+        flash("Project Updated")
+        return redirect(url_for("view_project", project_id=project.id))
+    return render_template("edit-project.html", form=edit_form, current_user=current_user)
+
+
+
 
 
 # Use a decorator so only an admin user can create new posts
-@app.route("/new-post", methods=["GET", "POST"])
+@app.route("/new-sheet", methods=["GET", "POST"])
 @admin_only
-def add_new_post():
-    form = CreatePostForm()
+def add_new_sheet():
+    form = CreateSheetForm()
     if form.validate_on_submit():
-        new_post = BlogPost(
+        new_sheet = Sheet(
             title=form.title.data,
             subtitle=form.subtitle.data,
             body=form.body.data,
             img_url=form.img_url.data,
-            author=current_user,
             date=date.today().strftime("%B %d, %Y")
         )
-        db.session.add(new_post)
+        db.session.add(new_sheet)
         db.session.commit()
-        return redirect(url_for("cheatsheets"))
-    return render_template("make-post.html", form=form, current_user=current_user)
+        return redirect(url_for("sheets"))
+    return render_template("make-sheet.html", form=form, current_user=current_user)
 
 
-# Use a decorator so only an admin user can edit a post
-@app.route("/edit-post/<int:post_id>", methods=["GET", "POST"])
-def edit_post(post_id):
-    post = db.get_or_404(BlogPost, post_id)
-    edit_form = CreatePostForm(
-        title=post.title,
-        subtitle=post.subtitle,
-        img_url=post.img_url,
-        author=post.author,
-        body=post.body
+# Use a decorator so only an admin user can edit a sheet
+@app.route("/edit-sheet/<int:sheet_id>", methods=["GET", "POST"])
+def edit_sheet(sheet_id):
+    sheet = db.get_or_404(Sheet, sheet_id)
+    edit_form = CreateSheetForm(
+        title=sheet.title,
+        subtitle=sheet.subtitle,
+        img_url=sheet.img_url,
+        body=sheet.body
     )
     if edit_form.validate_on_submit():
-        post.title = edit_form.title.data
-        post.subtitle = edit_form.subtitle.data
-        post.img_url = edit_form.img_url.data
-        post.author = current_user
-        post.body = edit_form.body.data
+        sheet.title = edit_form.title.data
+        sheet.subtitle = edit_form.subtitle.data
+        sheet.img_url = edit_form.img_url.data
+        sheet.body = edit_form.body.data
         db.session.commit()
-        return redirect(url_for("show_post", post_id=post.id))
-    return render_template("make-post.html", form=edit_form, is_edit=True, current_user=current_user)
+        return redirect(url_for("show_sheet", sheet_id=sheet.id))
+    return render_template("make-sheet.html", form=edit_form, is_edit=True, current_user=current_user)
 
 
 # Use a decorator so only an admin user can delete a post
-@app.route("/delete/<int:post_id>")
+@app.route("/delete/<int:sheet_id>")
 @admin_only
-def delete_post(post_id):
-    post_to_delete = db.get_or_404(BlogPost, post_id)
-    db.session.delete(post_to_delete)
+def delete_sheet(sheet_id):
+    sheet_to_delete = db.get_or_404(Sheet, sheet_id)
+    db.session.delete(sheet_to_delete)
     db.session.commit()
-    return redirect(url_for('cheatsheets'))
+    return redirect(url_for('sheets'))
 
 
 @app.route("/about")
@@ -278,29 +300,6 @@ def about():
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
     return render_template("contact.html", current_user=current_user)
-
-# Optional: You can include the email sending code from Day 60:
-# DON'T put your email and password here directly! The code will be visible when you upload to Github.
-# Use environment variables instead (Day 35)
-
-# MAIL_ADDRESS = os.environ.get("EMAIL_KEY")
-# MAIL_APP_PW = os.environ.get("PASSWORD_KEY")
-
-# @app.route("/contact", methods=["GET", "POST"])
-# def contact():
-#     if request.method == "POST":
-#         data = request.form
-#         send_email(data["name"], data["email"], data["phone"], data["message"])
-#         return render_template("contact.html", msg_sent=True)
-#     return render_template("contact.html", msg_sent=False)
-#
-#
-# def send_email(name, email, phone, message):
-#     email_message = f"Subject:New Message\n\nName: {name}\nEmail: {email}\nPhone: {phone}\nMessage:{message}"
-#     with smtplib.SMTP("smtp.gmail.com") as connection:
-#         connection.starttls()
-#         connection.login(MAIL_ADDRESS, MAIL_APP_PW)
-#         connection.sendmail(MAIL_ADDRESS, MAIL_APP_PW, email_message)
 
 
 if __name__ == "__main__":

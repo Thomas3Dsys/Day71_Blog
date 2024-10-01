@@ -1,0 +1,67 @@
+{% from "bootstrap5/form.html" import render_form %}
+{% include "header.html" %}
+
+<!-- Page Header-->
+<header
+  class="masthead"
+  style="background-image: url('../static/assets/img/backgrounds/fire02.jpg')"
+>
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="page-heading">
+          <h1>{{ project.title }}</h1>
+        
+          {% if project.blurb%}
+          <h2 class="subheading">{{ project.blurb }}</h2>
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+<!-- Project Content -->
+<article>
+  <div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+
+     <div class="col-md-10 col-lg-8 col-xl-7">
+          {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                  {% for message in messages %}
+                     <p class="flash">{{ message }}</p>
+                  {% endfor %}
+              {% endif %}
+          {% endwith %}
+      </div>
+
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="project-git">
+            <i class="fab fa-github"></i>
+            <a href="{{project.git_url}}" target="github"
+            >{{project.git_url}}</a> <i class="fa-solid fa-arrow-up-right-from-square  fa-2xs"></i>
+        </div> 
+      
+        {{ project.body|safe }}
+        <!--Only show Edit Sheet button if user id is 1 (admin user) -->
+        {% if current_user.id == 1 %}
+        <div class="d-flex justify-content-end mb-4">
+          <a
+            class="btn btn-primary float-right"
+            href="{{url_for('edit_project', project_id=project.id)}}"
+            >Edit Project</a
+          >
+        </div>
+        {% endif %}
+
+       
+       
+      </div>
+    </div>
+  </div>
+</article>
+
+{% include "footer.html" %}

@@ -4,13 +4,13 @@ from wtforms.validators import DataRequired, URL
 from flask_ckeditor import CKEditorField
 
 
-# WTForm for creating a blog post
-class CreatePostForm(FlaskForm):
-    title = StringField("Blog Post Title", validators=[DataRequired()])
+# WTForm for creating a Sheet
+class CreateSheetForm(FlaskForm):
+    title = StringField("Sheet Title", validators=[DataRequired()])
     subtitle = StringField("Subtitle", validators=[DataRequired()])
-    img_url = StringField("Blog Image URL", validators=[DataRequired(), URL()])
-    body = CKEditorField("Blog Content", validators=[DataRequired()])
-    submit = SubmitField("Submit Post")
+    img_url = StringField("Image URL", validators=[DataRequired(), URL()])
+    body = CKEditorField("Content", validators=[DataRequired()])
+    submit = SubmitField("Update Sheet")
 
 
 # Create a form to register new users
@@ -28,7 +28,25 @@ class LoginForm(FlaskForm):
     submit = SubmitField("Let Me In!")
 
 
-# Create a form to add comments
-class CommentForm(FlaskForm):
-    comment_text = CKEditorField("Comment", validators=[DataRequired()])
-    submit = SubmitField("Submit Comment")
+# # Create a form to add comments
+# class CommentForm(FlaskForm):
+#     comment_text = CKEditorField("Comment", validators=[DataRequired()])
+#     submit = SubmitField("Submit Comment")
+
+
+
+class NewProjectForm(FlaskForm):
+    title = StringField("Project", validators=[DataRequired()])
+    submit = SubmitField("Create New Project")
+    
+
+
+class EditProjectForm(FlaskForm):
+    title = StringField("Project Title", validators=[DataRequired()])
+    blurb = StringField("Blurb", validators=[DataRequired()])
+    git_url = StringField("GitHub Project URL", validators=[DataRequired(), URL()])
+    img_thumb = StringField("Thumbnail Image URL", validators=[DataRequired()])
+    body = CKEditorField("Project Write Up", validators=[DataRequired()])
+    submit = SubmitField("Update Project")
+
+

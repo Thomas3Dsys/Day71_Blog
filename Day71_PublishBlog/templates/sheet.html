@@ -1,0 +1,46 @@
+{% from "bootstrap5/form.html" import render_form %}
+{% include "header.html" %}
+
+<!-- Page Header-->
+<header class="masthead" style="background-image: url('{{sheet.img_url}}')">
+  <div class="container position-relative px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        <div class="sheet-heading">
+          <h1>{{ sheet.title }}</h1>
+          <h2 class="subheading">{{ sheet.subtitle }}</h2>
+          <span class="meta"
+            >Posted by
+            {{current_user.name}} on {{ sheet.date }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Sheet Content -->
+<article>
+  <div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+      <div class="col-md-10 col-lg-8 col-xl-7">
+        {{ sheet.body|safe }}
+        <!--Only show Edit Sheet button if user id is 1 (admin user) -->
+        {% if current_user.id == 1 %}
+        <div class="d-flex justify-content-end mb-4">
+          <a
+            class="btn btn-primary float-right"
+            href="{{url_for('edit_sheet', sheet_id=sheet.id)}}"
+            >Edit Sheet</a
+          >
+        </div>
+        {% endif %}
+
+       
+       
+      </div>
+    </div>
+  </div>
+</article>
+
+{% include "footer.html" %}

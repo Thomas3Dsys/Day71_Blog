@@ -1,4 +1,4 @@
-{% include "header.html" %}
+﻿{% include "header.html" %}
 
 <!-- Page Header-->
 <header
@@ -19,17 +19,40 @@
 <!-- Main Content-->
 <div class="container px-4 px-lg-5">
   <div class="row gx-4 gx-lg-5 justify-content-center">
-      <div class="col-md-10 col-lg-8 col-xl-7">
+      
+  
+    <div class="col-md-10 col-lg-8 col-xl-7">
+      <h3>Projects</h3>
+       {% for project in top_projects %}
+             <div class="list-project">
+             {% if project.img_thumb %}
+                    <img src="../static/assets/img/{{project.img_thumb}}" align="right" />
+             {% endif %}   
+             <h4><a href="{{project.git_url}}" target="github"><i class="fab fa-github"></i></a>
+                <a href="{{url_for('view_project', project_id=project.id)}}">{{project.title}}</a>
+             </h4>
+             {% if project.blurb %}
+             <h5>
+                 <span class='project-blurb'>{{project.blurb}}</span>
+                 </h5>
+             {% endif %}
+             </div>
+       {% endfor %}
+        </div>
 
-          Welcome, this is a page holder for now while work is under consruction:
-          <ul>
-              <li>
-                  View the python <a href="{{url_for('cheatsheets')}}">Cheat sheets</a> (blog posts)
-              </li>
-              <li>
-                  and <a href="{{url_for('projects')}}">projects</a> as they are added
-              </li>
-          </ul>
+        <div class="col-md-10 col-lg-8 col-xl-7">
+      <h3>Info Sheets</h3>
+
+         {% for sheet in top_sheets %}
+              <div class="list-sheet">
+                      <h4 class="sheet-title">
+                        <a href="{{ url_for('show_sheet', sheet_id=sheet.id) }}">{{ sheet.title }}</a>
+                      </h4>
+                      <h5 class="sheet-subtitle">{{ sheet.subtitle }}</h5>
+              </div>
+              
+              {% endfor %}
+        </div>
 
       </div>
   </div>

@@ -1,0 +1,21 @@
+ ############################### TODO:  ############################### 
+
+run todo list live
+add view non-user
+(view public lists with user hierarchy)
+
+publish pdfspeak project 
+update to include ui and pdf viewer? or launch pdf in OS
+
+
+ ############################### Comments:  ############################### 
+
+
+remove blog references, add sheets and project functionality. Add Resume Content
+
+removed comments db
+added projects db
+removed author references
+renamed blog_posts to cheatsheets
+implement projects functionality
+update contact and add resume

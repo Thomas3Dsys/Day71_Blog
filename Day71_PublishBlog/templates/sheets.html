@@ -9,7 +9,7 @@
     <div class="row gx-4 gx-lg-5 justify-content-center">
       <div class="col-md-10 col-lg-8 col-xl-7">
         <div class="page-heading">
-          <h1>Cheat Sheets</h1>
+          <h1>Info Sheets</h1>
          
         </div>
       </div>
@@ -22,41 +22,38 @@
     <div class="row gx-4 gx-lg-5 justify-content-center">
       <div class="col-md-10 col-lg-8 col-xl-7">
           <p>
-              <!-- Post preview-->
-              {% for post in all_posts %}
-              <div class="post-preview">
-                  <a href="{{ url_for('show_post', post_id=post.id) }}">
-                      <h2 class="post-title">{{ post.title }}</h2>
-                      <h3 class="post-subtitle">{{ post.subtitle }}</h3>
+              <!-- Sheet preview-->
+              {% for sheet in all_sheets %}
+              <div class="sheet-preview">
+                  <a href="{{ url_for('show_sheet', sheet_id=sheet.id) }}">
+                      <h2 class="sheet-title">{{ sheet.title }}</h2>
+                      <h3 class="sheet-subtitle">{{ sheet.subtitle }}</h3>
                   </a>
-                  <p class="post-meta">
+                  <p class="sheet-meta">
                       Posted by
-                      <!-- post.author.name is now a User object -->
-                      <a href="#">{{post.author.name}}</a>
-                      on {{post.date}}
+                      {{current_user.name}} on {{sheet.date}}
                       <!-- Only show delete button if user id is 1 (admin user) -->
                       {% if current_user.id == 1: %}
-                      <a href="{{url_for('delete_post', post_id=post.id) }}">✘</a>
+                      <a href="{{url_for('delete_sheet', sheet_id=sheet.id) }}">✘</a>
                       {% endif %}
                   </p>
               </div>
-              <!-- Divider-->
-              <hr class="my-4" />
+              
               {% endfor %}
 
-              <!-- New Post -->
-              <!-- Only show Create Post button if user id is 1 (admin user) -->
+              <!-- New Sheet -->
+              <!-- Only show Create Sheet button if user id is 1 (admin user) -->
               {% if current_user.id == 1: %}
               <div class="d-flex justify-content-end mb-4">
                   <a class="btn btn-primary float-right"
-                     href="{{url_for('add_new_post')}}">Create New Post</a>
+                     href="{{url_for('add_new_sheet')}}">Create New Sheet</a>
               </div>
               {% endif %}
 
-              <!-- Pager-->
+              <!-- Pager
               <div class="d-flex justify-content-end mb-4">
-                  <a class="btn btn-secondary text-uppercase" href="#!">Older Posts →</a>
-              </div>
+                  <a class="btn btn-secondary text-uppercase" href="#!">Older Sheets →</a>
+              </div>-->
 </div>
       </div>
     </div>

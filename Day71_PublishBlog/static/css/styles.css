@@ -1,4 +1,28 @@
 @charset "UTF-8";
+
+
+
+.project-git a
+{
+    display:inline;
+    margin-right:20px
+}
+
+.project, .list-project
+{
+    min-height:110px
+}
+.list-project, .list-sheet
+{
+    margin:20px;
+}
+
+
+.project-blurb
+{
+    font-size: 12pt;
+}
+
 /*!
 * Start Bootstrap - Clean Blog v6.0.9 (https://startbootstrap.com/theme/clean-blog)
 * Copyright 2013-2023 Start Bootstrap
@@ -10689,7 +10713,7 @@ header.masthead:before {
   opacity: 0.5;
 }
 header.masthead .page-heading,
-header.masthead .post-heading,
+header.masthead .sheet-heading,
 header.masthead .site-heading {
   color: #fff;
 }
@@ -10711,27 +10735,27 @@ header.masthead .site-heading .subheading {
   margin-top: 0.625rem;
   font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
-header.masthead .post-heading h1, header.masthead .post-heading .h1 {
+header.masthead .sheet-heading h1, header.masthead .sheet-heading .h1 {
   font-size: 2.25rem;
 }
-header.masthead .post-heading .meta,
-header.masthead .post-heading .subheading {
+header.masthead .sheet-heading .meta,
+header.masthead .sheet-heading .subheading {
   line-height: 1.1;
   display: block;
 }
-header.masthead .post-heading .subheading {
+header.masthead .sheet-heading .subheading {
   font-size: 1.5rem;
   font-weight: 600;
   margin: 0.75rem 0 2rem;
   font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
-header.masthead .post-heading .meta {
+header.masthead .sheet-heading .meta {
   font-size: 1.25rem;
   font-weight: 300;
   font-style: italic;
   font-family: "Lora", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
-header.masthead .post-heading .meta a {
+header.masthead .sheet-heading .meta a {
   color: #fff;
 }
 @media (min-width: 992px) {
@@ -10744,10 +10768,10 @@ header.masthead .post-heading .meta a {
   header.masthead .site-heading .h1 {
     font-size: 5rem;
   }
-  header.masthead .post-heading h1, header.masthead .post-heading .h1 {
+  header.masthead .sheet-heading h1, header.masthead .sheet-heading .h1 {
     font-size: 3.5rem;
   }
-  header.masthead .post-heading .subheading {
+  header.masthead .sheet-heading .subheading {
     font-size: 1.875rem;
   }
 }
@@ -10767,33 +10791,33 @@ header.masthead .post-heading .meta a {
   text-align: center;
 }
 
-.post-preview > a {
+.sheet-preview > a {
   color: #212529;
 }
-.post-preview > a:focus, .post-preview > a:hover {
+.sheet-preview > a:focus, .sheet-preview > a:hover {
   text-decoration: none;
   color: #0085A1;
 }
-.post-preview > a > .post-title {
+.sheet-preview > a > .sheet-title {
   font-size: 1.875rem;
   margin-top: 1.875rem;
   margin-bottom: 0.625rem;
 }
-.post-preview > a > .post-subtitle {
+.sheet-preview > a > .sheet-subtitle {
   font-weight: 300;
   margin-bottom: 0.625rem;
 }
-.post-preview > .post-meta {
+.sheet-preview > .sheet-meta {
   font-size: 1.125rem;
   font-style: italic;
   margin-top: 0;
   color: #6c757d;
 }
-.post-preview > .post-meta > a {
+.sheet-preview > .sheet-meta > a {
   text-decoration: none;
 }
 @media (min-width: 992px) {
-  .post-preview > a > .post-title {
+  .sheet-preview > a > .sheet-title {
     font-size: 2.25rem;
   }
 }

@@ -33,7 +33,6 @@
     <Content Include="requirements.txt" />
     <Content Include="static\assets\favicon.ico" />
     <Content Include="static\assets\img\about-bg.jpg" />
-    <Content Include="static\assets\img\angela-profile.jpg" />
     <Content Include="static\assets\img\backgrounds\fire01.jpg" />
     <Content Include="static\assets\img\backgrounds\fire02.jpg" />
     <Content Include="static\assets\img\backgrounds\guitars01.jpg" />
@@ -56,10 +55,15 @@
     <Content Include="static\assets\img\login-bg.jpg" />
     <Content Include="static\assets\img\post-bg.jpg" />
     <Content Include="static\assets\img\register-bg.jpg" />
+    <Content Include="static\assets\img\th_speedtyper.png" />
+    <Content Include="static\assets\img\th_tictactoe.png" />
+    <Content Include="static\assets\img\th_watermark.png" />
     <Content Include="static\css\styles.css" />
     <Content Include="static\js\scripts.js" />
     <Content Include="templates\about.html" />
-    <Content Include="templates\cheatsheets.html" />
+    <Content Include="templates\edit-project.html" />
+    <Content Include="templates\make-sheet.html" />
+    <Content Include="templates\project.html" />
     <Content Include="templates\projects.html" />
     <Content Include="templates\resume.html" />
     <Content Include="templates\contact.html" />
@@ -67,9 +71,10 @@
     <Content Include="templates\header.html" />
     <Content Include="templates\index.html" />
     <Content Include="templates\login.html" />
-    <Content Include="templates\make-post.html" />
-    <Content Include="templates\post.html" />
     <Content Include="templates\register.html" />
+    <Content Include="templates\sheet.html" />
+    <Content Include="templates\sheets.html" />
+    <Content Include="todo.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="instance\" />
@@ -78,6 +83,7 @@
     <Folder Include="static\assets\img\" />
     <Folder Include="static\assets\img\backgrounds\" />
     <Folder Include="static\assets\img\backgrounds\" />
+    <Folder Include="static\assets\img\backrounds\" />
     <Folder Include="static\css\" />
     <Folder Include="static\js\" />
     <Folder Include="templates\" />
