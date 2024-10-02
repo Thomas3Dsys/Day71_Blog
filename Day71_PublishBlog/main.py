@@ -103,6 +103,36 @@ def admin_only(f):
     return decorated_function
 
 
+
+@app.route('/')
+def home():
+    proj_res = db.session.execute(db.select(Project))
+    my_projects= proj_res.scalars().all()
+
+    sheet_res = db.session.execute(db.select(Sheet))
+    my_sheets= sheet_res.scalars().all()
+
+    return render_template("index.html", top_projects = my_projects, top_sheets = my_sheets, current_user=current_user)
+
+
+@app.route('/resume')
+def resume():
+    return render_template("resume.html", current_user=current_user)
+
+@app.route("/about")
+def about():
+    return render_template("about.html", current_user=current_user)
+
+
+@app.route("/contact", methods=["GET", "POST"])
+def contact():
+    return render_template("contact.html", current_user=current_user)
+
+
+
+
+#################################### USER MANAGEMENT #################################### 
+
 # Register new users into the User database
 @app.route('/register', methods=["GET", "POST"])
 def register():
@@ -164,10 +194,7 @@ def logout():
     return redirect(url_for('sheets'))
 
 
-@app.route('/resume')
-def resume():
-    return render_template("resume.html", current_user=current_user)
-
+#################################### PROJECTS #################################### 
 @app.route('/projects', methods=["GET", "POST"])
 def projects():
     form = NewProjectForm()
@@ -186,30 +213,6 @@ def projects():
         
 
     return render_template("projects.html", all_projects=projects, form=form, current_user=current_user)
-
-
-@app.route('/')
-def home():
-    proj_res = db.session.execute(db.select(Project))
-    projects= proj_res.scalars().all()
-
-    sheet_res = db.session.execute(db.select(Sheet))
-    sheets= sheet_res.scalars().all()
-
-    return render_template("index.html", top_projects = projects, top_sheets = sheets, current_user=current_user)
-
-@app.route('/sheets')
-def sheets():
-    result = db.session.execute(db.select(Sheet))
-    sheets = result.scalars().all()
-    return render_template("sheets.html", all_sheets=sheets, current_user=current_user)
-
-
-@app.route("/sheet/<int:sheet_id>", methods=["GET", "POST"])
-def show_sheet(sheet_id):
-    requested_sheet = db.get_or_404(Sheet, sheet_id)
-    return render_template("sheet.html", sheet=requested_sheet, current_user=current_user)
-
 
 
 @app.route("/project/<int:project_id>", methods=["GET", "POST"])
@@ -240,7 +243,18 @@ def edit_project(project_id):
     return render_template("edit-project.html", form=edit_form, current_user=current_user)
 
 
+#################################### SHEETS #################################### 
+@app.route('/sheets')
+def sheets():
+    result = db.session.execute(db.select(Sheet))
+    sheets = result.scalars().all()
+    return render_template("sheets.html", all_sheets=sheets, current_user=current_user)
 
+
+@app.route("/sheet/<int:sheet_id>", methods=["GET", "POST"])
+def show_sheet(sheet_id):
+    requested_sheet = db.get_or_404(Sheet, sheet_id)
+    return render_template("sheet.html", sheet=requested_sheet, current_user=current_user)
 
 
 # Use a decorator so only an admin user can create new posts
@@ -282,8 +296,8 @@ def edit_sheet(sheet_id):
     return render_template("make-sheet.html", form=edit_form, is_edit=True, current_user=current_user)
 
 
-# Use a decorator so only an admin user can delete a post
-@app.route("/delete/<int:sheet_id>")
+#Use a decorator so only an admin user can delete a post
+@app.route("/delete-sheet/<int:sheet_id>")
 @admin_only
 def delete_sheet(sheet_id):
     sheet_to_delete = db.get_or_404(Sheet, sheet_id)
@@ -291,15 +305,6 @@ def delete_sheet(sheet_id):
     db.session.commit()
     return redirect(url_for('sheets'))
 
-
-@app.route("/about")
-def about():
-    return render_template("about.html", current_user=current_user)
-
-
-@app.route("/contact", methods=["GET", "POST"])
-def contact():
-    return render_template("contact.html", current_user=current_user)
 
 
 if __name__ == "__main__":

@@ -8,9 +8,9 @@ from flask_ckeditor import CKEditorField
 class CreateSheetForm(FlaskForm):
     title = StringField("Sheet Title", validators=[DataRequired()])
     subtitle = StringField("Subtitle", validators=[DataRequired()])
-    img_url = StringField("Image URL", validators=[DataRequired(), URL()])
+    img_url = StringField("Image URL", validators=[DataRequired()])
     body = CKEditorField("Content", validators=[DataRequired()])
-    submit = SubmitField("Update Sheet")
+    submit = SubmitField("Create Sheet")
 
 
 # Create a form to register new users
@@ -28,18 +28,10 @@ class LoginForm(FlaskForm):
     submit = SubmitField("Let Me In!")
 
 
-# # Create a form to add comments
-# class CommentForm(FlaskForm):
-#     comment_text = CKEditorField("Comment", validators=[DataRequired()])
-#     submit = SubmitField("Submit Comment")
-
-
-
 class NewProjectForm(FlaskForm):
     title = StringField("Project", validators=[DataRequired()])
     submit = SubmitField("Create New Project")
     
-
 
 class EditProjectForm(FlaskForm):
     title = StringField("Project Title", validators=[DataRequired()])
