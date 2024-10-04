@@ -36,8 +36,8 @@ class NewProjectForm(FlaskForm):
 class EditProjectForm(FlaskForm):
     title = StringField("Project Title", validators=[DataRequired()])
     blurb = StringField("Blurb", validators=[DataRequired()])
-    git_url = StringField("GitHub Project URL", validators=[DataRequired(), URL()])
-    img_thumb = StringField("Thumbnail Image URL", validators=[DataRequired()])
+    git_url = StringField("GitHub Project URL")
+    img_thumb = StringField("Thumbnail Image URL")
     body = CKEditorField("Project Write Up", validators=[DataRequired()])
     submit = SubmitField("Update Project")
 
